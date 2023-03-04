@@ -1,0 +1,24 @@
+//Código desenvolvido por APC João Filho - joao.barbosa@pc.pi.gov.br
+//https://github.com/apcjoaofilho
+//Versão 1.0 - 04/03/2023
+let
+    Fonte = Csv.Document(File.Contents("C:\Users\joao_\OneDrive\Documentos FTSP\APC - João Filho\ANALISES\Tratamento de dados\Arquivos de testes\DadosCadastraisCustomizado.txt"),[Delimiter=",", Columns=2, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+    Linhas_filtradas = Table.SelectRows(Fonte, each ([Column1] <> null and [Column1] <> "" and [Column1] <> "*                                                                              *" and [Column1] <> "*                           PARÂMETRO(S) DE CONSULTA                           *" and [Column1] <> "* ---------------------------------------------------------------------------- *" and [Column1] <> "* ............................................................................ *" and [Column1] <> "********************************************************************************")),
+    Valor_substituido_ponto = Table.ReplaceValue(Linhas_filtradas,".","",Replacer.ReplaceText,{"Column1"}),
+    Valor_substituído_asterisco = Table.ReplaceValue(Valor_substituido_ponto,"*","",Replacer.ReplaceText,{"Column1"}),
+    Dividir_coluna_por_delimitador_doispontos = Table.SplitColumn(Valor_substituído_asterisco, "Column1", Splitter.SplitTextByEachDelimiter({":"}, QuoteStyle.Csv, false), {"Column1.1", "Column1.2"}),
+    Texto_aparado = Table.TransformColumns(Dividir_coluna_por_delimitador_doispontos,{{"Column1.1", Text.Trim, type text}, {"Column1.2", Text.Trim, type text}}),
+    Texto_limpo = Table.TransformColumns(Texto_aparado,{{"Column1.1", Text.Clean, type text}, {"Column1.2", Text.Clean, type text}}),
+    Coluna_indice_adicionada = Table.AddIndexColumn(Texto_limpo, "Índice", 1, 1, Int64.Type),
+    Coluna_em_pivo_dinamica = Table.Pivot(Coluna_indice_adicionada, List.Distinct(Coluna_indice_adicionada[Column1.1]), "Column1.1", "Column1.2"),
+    Preenchido_acima = Table.FillUp(Coluna_em_pivo_dinamica,{"Hora", "RELATÓRIO DE PESQUISA", "NÚMERO DA LINHA", "CLIENTE", "CPF", "ENDEREÇO", "BAIRRO", "CEP", "MUNICÍPIO", "ESTADO", "MODALIDADE", "SITUAÇÃO", "DATA HABILITAÇÃO"}),
+    Tipo_alterado = Table.TransformColumnTypes(Preenchido_acima,{{"Data", type date}, {"Hora", type time}, {"DATA HABILITAÇÃO", type date}}),
+    Linhas_nulas_filtradas_data = Table.SelectRows(Tipo_alterado, each [Data] <> null and [Data] <> ""),
+    Coluna_removida_relatorio_pesquisa = Table.RemoveColumns(Linhas_nulas_filtradas_data,{"RELATÓRIO DE PESQUISA"}),
+    Criar_coluna_extraido_DDD = Table.AddColumn(Coluna_removida_relatorio_pesquisa, "DDD", each Text.BetweenDelimiters([NÚMERO DA LINHA], "(", ")"), type text),
+    Coluna_CPF_retirar_traco = Table.ReplaceValue(Criar_coluna_extraido_DDD,"-","",Replacer.ReplaceText,{"CPF"}),
+    Colunas_renomeadas = Table.RenameColumns(Coluna_CPF_retirar_traco,{{"Data", "Data_DC"}, {"Hora", "Hora_DC"}, {"NÚMERO DA LINHA", "NUMERO"}}),
+    Colunas_reordenadas = Table.ReorderColumns(Colunas_renomeadas,{"Column2", "Índice", "Data_DC", "Hora_DC", "DDD", "NUMERO", "DATA HABILITAÇÃO", "CLIENTE", "CPF", "ENDEREÇO", "BAIRRO", "CEP", "MUNICÍPIO", "ESTADO", "MODALIDADE", "SITUAÇÃO"}),
+    Outras_colunas_removidas = Table.SelectColumns(Colunas_reordenadas,{"Data_DC", "Hora_DC", "DDD", "NUMERO", "DATA HABILITAÇÃO", "CLIENTE", "CPF", "ENDEREÇO", "BAIRRO", "CEP", "MUNICÍPIO", "ESTADO", "MODALIDADE", "SITUAÇÃO"})
+in
+    Outras_colunas_removidas
