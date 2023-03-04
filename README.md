@@ -3,10 +3,9 @@ Tratamento de dados cadastrais em Planilhas - Power Query - Power BI
 
 Esta planilha serve para automatizar a importação de dados cadastrais da vivo em arquivos .txt para uma planilha. 
 Muito útil quando há uma série de DC dentro de um mesmo arquivo .txt
-É possível a importação de vários arquivos de dentro de uma pasta, mas é necessário a modificação do código.
+É possível a importação de vários arquivos de dentro de uma pasta, mas é necessário a modificação do código. Me contate para saber mais.
 
-Baixe o arquivo Tratamento dados cadastrais VIVO.xlsx e siga as instruções contidas na planilha.
-
+Clque no arquivo Tratamento dados cadastrais VIVO.xlsx, faça o download siga as instruções contidas na planilha ou logo abaixo:
 
 Instruções de uso Tratamento de DADOS CADASTRAIS VIVO
 1º Aperte as teclas - Alt + S + P + N + F (Alt + SPNF) - Atalho para configurar arquivo txt fonte dos dados
