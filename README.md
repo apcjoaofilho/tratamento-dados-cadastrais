@@ -1,4 +1,6 @@
-# tratamento-dados-cadastrais VIVO - Pressione RELEASE ao lado para Download da última versão da planilha
+# tratamento-dados-cadastrais VIVO
+Pressione RELEASE ao lado direito para download da última versão da planilha
+
 Tratamento de dados cadastrais em Planilhas - Power Query - Power BI
 
 Esta planilha serve para automatizar a importação de dados cadastrais da VIVO em arquivos .txt para uma planilha. 
