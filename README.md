@@ -1,5 +1,5 @@
 # tratamento-dados-cadastrais VIVO
-Pressione RELEASE ao lado direito para download da última versão da planilha
+Pressione RELEASE ao lado direito para download da última versão da planilha xlsx
 
 Tratamento de dados cadastrais em Planilhas - Power Query - Power BI
 
